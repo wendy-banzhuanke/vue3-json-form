@@ -1,0 +1,55 @@
+.code_layout {
+  height: 100vh;
+  border: 1px solid;
+  display: flex;
+  overflow: hidden;
+  &_left {
+    position: relative;
+    overflow: hidden;
+    height: 100vh;
+    .left {
+      &_bar {
+        resize: horizontal;
+        cursor: ew-resize;
+        width: 200px;
+        height: 100vh;
+        overflow: hidden;
+        border: 1px solid black;
+        opacity: 0;
+
+        &::-webkit-scrollbar {
+          width: 200px;
+          height: 100vh;
+        }
+      }
+      &_line {
+        position: absolute;
+        right: 0;
+        top: 0;
+        bottom: 0;
+        border-right: 2px solid #eee;
+        border-left: 1px solid red;
+        pointer-events: none;
+      }
+      &_content {
+        margin: 0;
+        height: 100vh;
+        position: absolute;
+        top: 0;
+        right: 5px;
+        bottom: 0;
+        left: 0;
+      }
+    }
+
+    .left_bar:hover ~ .left-line,
+    .left_bar:active ~ .left-line {
+      border-left: 1px dashed skyblue;
+    }
+  }
+  &_right {
+    height: 100vh;
+    width: 200px;
+    flex: 1;
+  }
+}

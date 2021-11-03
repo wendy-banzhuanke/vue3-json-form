@@ -1,26 +1,27 @@
-import { defineComponent, reactive } from "vue";
-import HelloWorld from "@/components/HelloWorld";
+import { defineComponent } from "vue";
+// const sensors = require("sa-sdk-javascript");
+
 // const img = require("./assets/logo.png");
 
-interface User {
-  name: string;
-  age: number;
-}
+// interface User {
+//   name: string;
+//   age: number;
+// }
 
 export default defineComponent({
   setup() {
-    const state = reactive<User>({
-      name: "QWEQWE",
-      age: 12
-    });
+    // const state = reactive<User>({
+    //   name: "QWEQWE",
+    //   age: 12
+    // });
 
     return () => {
-      const { age, name } = state;
       return (
-        <div id="app">
-          <img alt="Vue logo" src={require("./assets/logo.png")} />
-          {name}
-          <HelloWorld msg="we" age={6} />
+        <div id="app" class="h-screen">
+          {/* <img alt="Vue logo" src={require("./assets/logo.png")} /> */}
+          {/* {name} */}
+          {/* <HelloWorld msg="we" age={6} /> */}
+          <router-view />
         </div>
       );
     };

@@ -9,7 +9,6 @@ const PropsType = {
     type: Number as PropType<number>
   }
 } as const;
-
 export default defineComponent({
   name: "HelloWorld",
   props: PropsType,
@@ -18,6 +17,7 @@ export default defineComponent({
       <template>
         <div class="hello">
           <h1>{_.msg}</h1>
+          <p>{_.age}</p>
         </div>
       </template>;
     };
