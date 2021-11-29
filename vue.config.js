@@ -1,7 +1,7 @@
 /*
  * @Author: zhangjian
  * @Date: 2021-10-08 14:55:17
- * @LastEditTime: 2021-11-03 17:02:37
+ * @LastEditTime: 2021-11-09 16:18:45
  * @LastEditors: zhangjian
  * @Description: 描述
  */
@@ -11,9 +11,18 @@ const MonacoWebpackPlugin = require("monaco-editor-webpack-plugin");
 
 module.exports = {
   css: {
-    requireModuleExtension: true
+    requireModuleExtension: true,
   },
   configureWebpack: {
+    module: {
+      rules: [
+        {
+          test: /\.mjs$/,
+          include: /node_modules/,
+          type: "javascript/auto",
+        },
+      ],
+    },
     // module: {
     //   rules: [
     //   {
@@ -51,6 +60,6 @@ module.exports = {
     //     ]
     //   }]
     // },
-    plugins: [new MonacoWebpackPlugin()]
-  }
+    plugins: [new MonacoWebpackPlugin()],
+  },
 };

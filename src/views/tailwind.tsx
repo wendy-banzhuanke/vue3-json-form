@@ -3,7 +3,7 @@ import {
   cardDataMock,
   Result,
   headerNavState,
-  cardType
+  cardType,
 } from "./tailwind_state";
 import sensors from "sa-sdk-javascript";
 
@@ -27,14 +27,14 @@ export default defineComponent({
       logoUrl:
         "https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fpic.baike.soso.com%2Fp%2F20140221%2F20140221021609-1672953379.jpg&refer=http%3A%2F%2Fpic.baike.soso.com&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=jpeg?sec=1623911320&t=3246405c3cdc7262373b73539502a0b2",
       leftNavActive: 0,
-      cardData: _cardDataMock
+      cardData: _cardDataMock,
     });
 
     // onMounted(() => {
     //   console.log("sensors==", $sensor);
     // });
 
-    const cardRender: Function = () => {
+    const cardRender = () => {
       const _card = [];
       for (const item in state.cardData) {
         _card.push(
@@ -66,7 +66,7 @@ export default defineComponent({
               <img class="rounded-full" src={state.avatarUrl} />
             </div>
             <ul class="w-full pt-5.5">
-              {[0, 1, 3].map(item => {
+              {[0, 1, 3].map((item) => {
                 return (
                   <li
                     class={`group h-11 pt-3 cursor-pointer ${
@@ -93,7 +93,7 @@ export default defineComponent({
                 <p class="text-gray-800 text-lg">XXXXXX集团有限公司</p>
               </div>
               <ul class="flex">
-                {headerNavState.map(item => {
+                {headerNavState.map((item) => {
                   return (
                     <li class="group flex mr-10 items-center cursor-pointer">
                       <i class="w-3.5 h-3.5 mr-1 rounded-full border border-gray-300 group-hover:border-blue-500"></i>
@@ -125,5 +125,5 @@ export default defineComponent({
         </div>
       );
     };
-  }
+  },
 });

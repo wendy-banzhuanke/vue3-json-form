@@ -1,97 +1,114 @@
 /*
  * @Author: zhangjian
  * @Date: 2021-07-09 10:51:51
- * @LastEditTime: 2021-11-03 17:00:37
+ * @LastEditTime: 2021-11-09 10:25:38
  * @LastEditors: zhangjian
  * @Description: 描述
  */
-import { defineComponent, onMounted, shallowRef, ref, PropType } from "vue";
+/* eslint no-use-before-define: 0 */
+
+import {
+  defineComponent,
+  ref,
+  onMounted,
+  watch,
+  onBeforeUnmount,
+  shallowRef,
+} from "vue";
+
 import * as Monaco from "monaco-editor";
+import styles from "./monaco.module.scss";
+
+import type { PropType } from "vue";
 
 export default defineComponent({
-  name: "monaco-editor",
   props: {
-    width: {
-      type: String,
-      default: "100vw"
+    code: {
+      type: String as PropType<string>,
+      required: true,
     },
-    height: {
-      type: String,
-      default: "100vh"
+    onChange: {
+      type: Function as PropType<
+        (value: string, event: Monaco.editor.IModelContentChangedEvent) => void
+      >,
+      required: true,
     },
-    /**
-     * ['abap', 'apex', 'azcli', 'bat', 'bicep', 'cameligo', 'clojure', 'coffee', 'cpp', 'csharp', 'csp', 'css', 'dart', 'dockerfile', 'ecl', 'elixir', 'fsharp', 'go', 'graphql', 'handlebars', 'hcl', 'html', 'ini', 'java', 'javascript', 'json', 'julia', 'kotlin', 'less', 'lexon', 'liquid', 'lua', 'm3', 'markdown', 'mips', 'msdax', 'mysql', 'objective-c', 'pascal', 'pascaligo', 'perl', 'pgsql', 'php', 'postiats', 'powerquery', 'powershell', 'pug', 'python', 'qsharp', 'r', 'razor', 'redis', 'redshift', 'restructuredtext', 'ruby', 'rust', 'sb', 'scala', 'scheme', 'scss', 'shell', 'solidity', 'sophia', 'sparql', 'sql', 'st', 'swift', 'systemverilog', 'tcl', 'twig', 'typescript', 'vb', 'xml', 'yaml']
-     */
-    language: {
-      type: String,
-      default: "javascript"
+    title: {
+      type: String as PropType<string>,
+      required: true,
     },
-    theme: {
-      type: String,
-      default: "vs-dark"
-    },
-    schema: {
-      type: String,
-      default: ""
-    },
-    model: {
-      type: Object as PropType<Monaco.editor.ITextModel | null>,
-      default: null
-    }
   },
-  emits: ["init", "change"],
-  setup(_, { emit }) {
+  setup(props) {
+    // must be shallowRef, if not, editor.getValue() won't work
     const editorRef = shallowRef();
-    const monacoDom = ref({} as HTMLElement);
+
+    const containerRef = ref();
+
+    let _subscription: Monaco.IDisposable | undefined;
+    let preventTriggerChangeEvent = false;
 
     onMounted(() => {
-      const meDom: HTMLElement = document.getElementById(
-        "monaco-editor"
-      ) as HTMLElement;
-
-      if (meDom) {
-        meDom.style.width = _.width;
-        meDom.style.height = _.height;
-      }
-
-      const model = !_.model
-        ? Monaco.editor.createModel("hahahaha", _.language)
-        : _.model;
-
-      const _monaco = Monaco.editor.create(monacoDom.value, {
-        model: model,
-        // value: _.schema,
-        // language: _.language,
-        automaticLayout: true,
-        theme: _.theme
-      });
-
-      editorRef.value = _monaco;
-
-      emit("init", editorRef.value);
-
-      // 编辑器内容发生改变时触发
-      editorRef.value.onDidChangeModelContent(
-        (e: Monaco.editor.IModelContentChangedEvent) => {
-          console.log("e:", e);
-
-          emit("change", {
-            modelInstance: editorRef.value,
-            value: editorRef.value.getValue()
-          });
+      const editor = (editorRef.value = Monaco.editor.create(
+        containerRef.value,
+        {
+          value: props.code,
+          language: "json",
+          formatOnPaste: true,
+          tabSize: 2,
+          minimap: {
+            enabled: false,
+          },
         }
-      );
+      ));
+
+      _subscription = editor.onDidChangeModelContent((event) => {
+        console.log("--------->", preventTriggerChangeEvent);
+        if (!preventTriggerChangeEvent) {
+          props.onChange(editor.getValue(), event);
+        }
+      });
     });
+
+    onBeforeUnmount(() => {
+      if (_subscription) _subscription.dispose();
+    });
+
+    watch(
+      () => props.code,
+      (v) => {
+        const editor = editorRef.value;
+        const model = editor.getModel();
+        if (v !== model.getValue()) {
+          editor.pushUndoStop();
+          preventTriggerChangeEvent = true;
+          // pushEditOperations says it expects a cursorComputer, but doesn't seem to need one.
+          model.pushEditOperations(
+            [],
+            [
+              {
+                range: model.getFullModelRange(),
+                text: v,
+              },
+            ]
+          );
+          editor.pushUndoStop();
+          preventTriggerChangeEvent = false;
+        }
+        // if (v !== editorRef.value.getValue()) {
+        //   editorRef.value.setValue(v)
+        // }
+      }
+    );
 
     return () => {
       return (
-        <div
-          ref={monacoDom}
-          id="monaco-editor"
-          style={{ width: `${_.width}px`, height: `${_.height}px` }}
-          class="h-full"
-        ></div>
+        <div class={styles.container}>
+          <div class={styles.title}>
+            <span>{props.title}</span>
+          </div>
+          <div class={styles.code} ref={containerRef}></div>
+        </div>
       );
     };
-  }
+  },
 });

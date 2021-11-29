@@ -1,7 +1,7 @@
 /*
  * @Author: zhangjian
  * @Date: 2021-05-17 15:31:52
- * @LastEditTime: 2021-11-02 14:33:28
+ * @LastEditTime: 2021-11-12 11:07:14
  * @LastEditors: zhangjian
  * @Description: 描述
  */
@@ -11,37 +11,57 @@ import CssinjsPage from "@/views/cssinjs";
 import MonacoPage from "@/views/monaco";
 import TabPage from "@/views/tab";
 import CodePage from "@/views/code";
+import TreePage from "@/views/tree";
+import JsonSchemaForm from "@/views/json_schema_form";
+import GeneratePage from "@/views/generate";
+import GenerateDemoPage from "@/views/generate-demo.vue";
 
 const routes: Array<RouteRecordRaw> = [
   {
     path: "/",
-    component: TailwindPage
+    component: TailwindPage,
   },
   {
     path: "/tailwind",
-    component: TailwindPage
+    component: TailwindPage,
   },
   {
     path: "/cssinjs",
-    component: CssinjsPage
+    component: CssinjsPage,
   },
   {
     path: "/monaco",
-    component: MonacoPage
+    component: MonacoPage,
   },
   {
     path: "/tab",
-    component: TabPage
+    component: TabPage,
   },
   {
     path: "/code",
-    component: CodePage
-  }
+    component: CodePage,
+  },
+  {
+    path: "/tree",
+    component: TreePage,
+  },
+  {
+    path: "/jsonpage1",
+    component: JsonSchemaForm,
+  },
+  {
+    path: "/generate",
+    component: GeneratePage,
+  },
+  {
+    path: "/generate2",
+    component: GenerateDemoPage,
+  },
 ];
 
 const router = createRouter({
   history: createWebHistory(),
-  routes
+  routes,
 });
 
 export default router;

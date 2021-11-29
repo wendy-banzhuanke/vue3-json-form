@@ -1,7 +1,7 @@
 /*
  * @Author: zhangjian
  * @Date: 2021-11-01 17:14:09
- * @LastEditTime: 2021-11-03 16:47:22
+ * @LastEditTime: 2021-11-29 10:19:21
  * @LastEditors: zhangjian
  * @Description: 描述
  */
@@ -13,4 +13,19 @@ export declare interface TabItem {
 }
 export declare interface ToJSON {
   [propName: string]: string;
+}
+
+export declare interface OneFormData {
+  [propName: string]: string;
+}
+
+export declare interface DragItemData {
+  [propName: string]: string;
+}
+
+export declare interface ComputedDragOption {
+  animation: number;
+  group: string;
+  disabled: boolean;
+  ghostClass: string;
 }
