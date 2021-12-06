@@ -1,7 +1,7 @@
 /*
  * @Author: zhangjian
  * @Date: 2021-10-08 16:53:08
- * @LastEditTime: 2021-11-03 16:51:12
+ * @LastEditTime: 2021-11-29 17:17:21
  * @LastEditors: zhangjian
  * @Description: 描述
  */
@@ -17,16 +17,15 @@ export default defineComponent({
   props: {
     tabs: {
       type: Array as PropType<TabItem[]>,
-      default: () => []
     },
     addible: {
       type: Boolean as PropType<boolean>,
-      default: false
+      default: false,
     },
     modelValue: {
       type: [String, Number],
-      default: 0
-    }
+      default: 0,
+    },
   },
   emits: ["addTab", "update:modelValue", "removeTab"],
   setup(_, ctx) {
@@ -56,7 +55,7 @@ export default defineComponent({
      */
     const onRemoveTabHandler = (item: TabItem, index: number, event: Event) => {
       event.stopPropagation();
-      if (_.tabs.length === 1) {
+      if ((_.tabs as Array<TabItem>)?.length === 1) {
         alert("只有一个tabs, 不允许删除");
       } else {
         // 其他部分添加自己的代码
@@ -83,39 +82,43 @@ export default defineComponent({
         <div class={style.w_tab_comp}>
           <div class={style.w_tab}>
             <div class={style.w_tab_wrap}>
-              {_.tabs.map((item: TabItem, index: number) => {
-                return (
-                  <div
-                    key={item.id}
-                    class={[
-                      style.w_tab_item,
-                      item.id === _.modelValue ? style.active : ""
-                    ]}
-                    onClick={() => onChangeTabHandler(item)}
-                  >
-                    <span class={style.w_tab_item_name}>{item.tabName}</span>
-                    <i
-                      class={style.w_tab_item_clear}
-                      onClick={event => onRemoveTabHandler(item, index, event)}
+              {(_.tabs as Array<TabItem>).map(
+                (item: TabItem, index: number) => {
+                  return (
+                    <div
+                      key={item.id}
+                      class={[
+                        style.w_tab_item,
+                        item.id === _.modelValue ? style.active : "",
+                      ]}
+                      onClick={() => onChangeTabHandler(item)}
                     >
-                      +
-                    </i>
-                  </div>
-                );
-              })}
+                      <span class={style.w_tab_item_name}>{item.tabName}</span>
+                      <i
+                        class={style.w_tab_item_clear}
+                        onClick={(event) =>
+                          onRemoveTabHandler(item, index, event)
+                        }
+                      >
+                        +
+                      </i>
+                    </div>
+                  );
+                }
+              )}
             </div>
             {newButton}
             <div class={style.w_line}></div>
           </div>
           <div class={style.w_tab_panel}>
-            {_.tabs.map((item: TabItem) => {
+            {(_.tabs as Array<TabItem>).map((item: TabItem) => {
               return (
                 <div
                   key={item.id}
                   class={[
                     item.id === _.modelValue
                       ? style.panel_show
-                      : style.panel_hidden
+                      : style.panel_hidden,
                   ]}
                 >
                   {slots.panel !== undefined ? renderSlot(slots, "panel") : ""}
@@ -126,5 +129,5 @@ export default defineComponent({
         </div>
       );
     };
-  }
+  },
 });

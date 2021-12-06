@@ -1,7 +1,7 @@
 /*
  * @Author: zhangjian
  * @Date: 2021-07-09 10:51:51
- * @LastEditTime: 2021-11-09 10:25:38
+ * @LastEditTime: 2021-11-29 18:07:43
  * @LastEditors: zhangjian
  * @Description: 描述
  */
@@ -31,14 +31,14 @@ export default defineComponent({
       type: Function as PropType<
         (value: string, event: Monaco.editor.IModelContentChangedEvent) => void
       >,
-      required: true,
+      // required: true,
     },
     title: {
       type: String as PropType<string>,
       required: true,
     },
   },
-  setup(props) {
+  setup(_) {
     // must be shallowRef, if not, editor.getValue() won't work
     const editorRef = shallowRef();
 
@@ -51,7 +51,7 @@ export default defineComponent({
       const editor = (editorRef.value = Monaco.editor.create(
         containerRef.value,
         {
-          value: props.code,
+          value: _.code as string,
           language: "json",
           formatOnPaste: true,
           tabSize: 2,
@@ -64,7 +64,12 @@ export default defineComponent({
       _subscription = editor.onDidChangeModelContent((event) => {
         console.log("--------->", preventTriggerChangeEvent);
         if (!preventTriggerChangeEvent) {
-          props.onChange(editor.getValue(), event);
+          (
+            _.onChange as (
+              value: string,
+              event: Monaco.editor.IModelContentChangedEvent
+            ) => void
+          )(editor.getValue(), event);
         }
       });
     });
@@ -74,7 +79,7 @@ export default defineComponent({
     });
 
     watch(
-      () => props.code,
+      () => _.code,
       (v) => {
         const editor = editorRef.value;
         const model = editor.getModel();
@@ -104,7 +109,7 @@ export default defineComponent({
       return (
         <div class={styles.container}>
           <div class={styles.title}>
-            <span>{props.title}</span>
+            <span>{_.title}</span>
           </div>
           <div class={styles.code} ref={containerRef}></div>
         </div>

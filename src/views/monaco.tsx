@@ -1,7 +1,7 @@
 /*
  * @Author: zhangjian
  * @Date: 2021-10-08 10:25:55
- * @LastEditTime: 2021-11-29 10:48:32
+ * @LastEditTime: 2021-11-29 16:53:02
  * @LastEditors: zhangjian
  * @Description: 描述
  */
@@ -49,7 +49,7 @@ export default defineComponent({
             <MonacoEditor
               code={data.schema}
               class={styles.code_panel}
-              onChange={handleSchemaChange}
+              onChange={() => handleSchemaChange}
               title="Schema"
             />
           </div>
